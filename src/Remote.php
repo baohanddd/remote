@@ -1,8 +1,7 @@
 <?php
 namespace baohan\Remote;
 
-use App\Component\Collection\Document;
-use App\Component\Collection\Documents;
+use baohan\Remote\Response\Document;
 use GuzzleHttp\Client;
 
 abstract class Remote
@@ -35,23 +34,25 @@ abstract class Remote
 
     public function __construct()
     {
-        $config = $this->getConfig();
+        $cfg = $this->getConfig();
+        if(!$cfg instanceof Config)
+            throw new \RuntimeException('It must be instance of baohan\Remote\Config returned by getConfig()');
         $this->uri = $this->getURI();
 
         $this->http = new Client([
-            'base_uri'    => $config['host'],
+            'base_uri'    => $cfg->getHost(),
             'timeout'     => 5.0,
             'verify'      => false,
             'http_errors' => false,
             'debug'       => false,
         ]);
-        $this->prefix = $config['prefix'];
+        $this->prefix = $cfg->getPrefix();
     }
 
     /**
      * Get configure data
      *
-     * @return array
+     * @return Config
      */
     abstract public function getConfig();
 
@@ -66,35 +67,33 @@ abstract class Remote
      * Find by criteria and return collection
      *
      * @param array $criteria
-     * @return \App\Component\Collection\Document[]
+     * @return Collection
      */
     public function find($criteria = [])
     {
         $this->res = $this->http->get($this->uri(), ['query' => $criteria]);
-        return $this->documents($this->json(true));
+        return $this->document($this->json(true));
     }
 
     /**
      * Find by criteria and return the first element
      *
      * @param array $criteria
-     * @return \App\Component\Collection\Document
+     * @return Document
      */
     public function findFirst($criteria = [])
     {
         $criteria['limit'] = 1;
         $criteria['page']  = 1;
         $this->res = $this->http->get($this->uri(), ['query' => $criteria]);
-        $docs = $this->documents($this->json(true));
-        if($docs) return $docs[0];
-                  return new Document();
+        return $this->document($this->json(true));
     }
 
     /**
      * Find by criteria and return collection
      *
      * @param array $criteria
-     * @return \App\Component\Collection\Document
+     * @return Collection
      */
     public function count($criteria = [])
     {
@@ -106,7 +105,7 @@ abstract class Remote
      * Find by id and return item
      *
      * @param $id
-     * @return \App\Component\Collection\Document
+     * @return Collection
      */
     public function findById($id)
     {
@@ -170,16 +169,6 @@ abstract class Remote
     private function document($json = [])
     {
         return $json ? new Document($json) : new Document();
-    }
-
-    /**
-     * @param array $json
-     * @return Documents
-     */
-    private function documents($json = [])
-    {
-        $res = new Documents($json);
-        return $res->wrap();
     }
 
     /**
