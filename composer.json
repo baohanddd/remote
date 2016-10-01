@@ -4,7 +4,7 @@
   "require": {
     "php": "^5.5.9",
     "guzzlehttp/guzzle": "6.*",
-    "baohan/"
+    "baohan/collection": "1.0.1"
   },
   "license": "MIT",
   "authors": [
