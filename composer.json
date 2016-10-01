@@ -1,0 +1,22 @@
+{
+  "name": "baohan/remote",
+  "description": "A remote client based on Guzzle 6",
+  "require": {
+    "php": "^5.5.9",
+    "guzzlehttp/guzzle": "6.*",
+    "baohan/"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "baohan",
+      "email": "baohanddd@gmail.com",
+      "homepage": "https://twitter.com/baohanddd"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "baohan\\Remote\\": "src/"
+    }
+  }
+}
