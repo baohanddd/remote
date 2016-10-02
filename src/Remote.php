@@ -139,6 +139,19 @@ abstract class Remote
     }
 
     /**
+     * patch item by id
+     *
+     * @param $id
+     * @param array $data
+     * @return bool
+     */
+    public function patch($id, $data = [])
+    {
+        $this->res = $this->http->patch($this->uri().'/'.$id, ['form_params' => $data]);
+        return $this->success();
+    }
+
+    /**
      * Delete item by id
      *
      * @param $id
