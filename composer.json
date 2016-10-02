@@ -4,7 +4,8 @@
   "require": {
     "php": "^5.5.9",
     "guzzlehttp/guzzle": "6.*",
-    "baohan/collection": "1.0.1"
+    "baohan/collection": "1.0.1",
+    "kevinrob/guzzle-cache-middleware": "1.4.*"
   },
   "license": "MIT",
   "authors": [

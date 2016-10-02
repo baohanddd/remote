@@ -3,6 +3,8 @@ namespace baohan\Remote;
 
 use baohan\Remote\Response\Document;
 use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
+use Kevinrob\GuzzleCache\CacheMiddleware;
 
 abstract class Remote
 {
@@ -37,16 +39,28 @@ abstract class Remote
         $cfg = $this->getConfig();
         if(!$cfg instanceof Config)
             throw new \RuntimeException('It must be instance of baohan\Remote\Config returned by getConfig()');
-        $this->uri = $this->getURI();
 
+        $this->uri = $this->getURI();
         $this->http = new Client([
             'base_uri'    => $cfg->getHost(),
             'timeout'     => $cfg->getTimeout() ?: 5.0,
             'verify'      => $cfg->enableVerify()  ?: false,
             'http_errors' => $cfg->enableHttpErrors() ?: false,
             'debug'       => $cfg->enableDebug() ?: false,
+            'handler'     => $this->getStack()
         ]);
+
         $this->prefix = $cfg->getPrefix();
+    }
+
+    /**
+     * @return HandlerStack
+     */
+    protected function getStack()
+    {
+        $stack = HandlerStack::create();
+        $stack->push(new CacheMiddleware(), 'cache');
+        return $stack;
     }
 
     /**
