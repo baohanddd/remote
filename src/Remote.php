@@ -41,10 +41,10 @@ abstract class Remote
 
         $this->http = new Client([
             'base_uri'    => $cfg->getHost(),
-            'timeout'     => 5.0,
-            'verify'      => false,
-            'http_errors' => false,
-            'debug'       => false,
+            'timeout'     => $cfg->getTimeout() ?: 5.0,
+            'verify'      => $cfg->enableVerify()  ?: false,
+            'http_errors' => $cfg->enableHttpErrors() ?: false,
+            'debug'       => $cfg->enableDebug() ?: false,
         ]);
         $this->prefix = $cfg->getPrefix();
     }
@@ -109,7 +109,7 @@ abstract class Remote
      */
     public function findById($id)
     {
-        $this->res = $this->http->get($this->uri().'/'.$id);
+        $this->res = $this->http->get($this->uri() . '/' . $id);
         return $this->document($this->json(true));
     }
 

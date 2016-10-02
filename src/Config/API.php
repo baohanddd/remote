@@ -1,46 +1,47 @@
 <?php
-namespace baohan\Remote;
+namespace baohan\Remote\Config;
 
+use baohan\Remote\Config;
 
-interface Config
+abstract class API implements Config
 {
-    /**
-     * Example: "http:://local.remote.com"
-     *
-     * @return string
-     */
-    public function getHost();
-
-    /**
-     * @return string
-     */
-    public function getPrefix();
-
     /**
      * Specified value of timeout, unit: second, default: 5.0
      *
      * @return float
      */
-    public function getTimeout();
+    public function getTimeout()
+    {
+        return 5.0;
+    }
 
     /**
      * Enable verify via SSL, default is false
      *
      * @return bool
      */
-    public function enableVerify();
+    public function enableVerify()
+    {
+        return false;
+    }
 
     /**
      * Enable throw exception when occurs http error, default: false
      *
      * @return bool
      */
-    public function enableHttpErrors();
+    public function enableHttpErrors()
+    {
+        return false;
+    }
 
     /**
      * Enable debug mode, default: false
      *
      * @return bool
      */
-    public function enableDebug();
+    public function enableDebug()
+    {
+        return false;
+    }
 }
